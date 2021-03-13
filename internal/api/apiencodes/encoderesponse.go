@@ -3,7 +3,7 @@ package apiencodes
 import (
 	"context"
 	"encoding/json"
-	"github.com/F-Amaral/apiagenda/api/apierror"
+	"github.com/F-Amaral/apiagenda/internal/api/apierror"
 	"net/http"
 )
 

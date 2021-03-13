@@ -3,8 +3,8 @@ package agendahttp
 import (
 	"context"
 	"encoding/json"
-	"github.com/F-Amaral/apiagenda/api/apierror"
-	"github.com/F-Amaral/apiagenda/entities"
+	"github.com/F-Amaral/apiagenda/internal/api/apierror"
+	"github.com/F-Amaral/apiagenda/pkg/domain/entities"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"

@@ -2,11 +2,11 @@ package services
 
 import (
 	"context"
-	"github.com/F-Amaral/apiagenda/api/apierror"
-	"github.com/F-Amaral/apiagenda/entities"
+	"github.com/F-Amaral/apiagenda/internal/api/apierror"
+	"github.com/F-Amaral/apiagenda/pkg/domain/entities"
 )
 
-type AgendaService interface {
+type ContactService interface {
 	Add(ctx context.Context, contact *entities.Contact) (*entities.Contact, apierror.ApiError)
 	Remove(ctx context.Context, id string) (*entities.Contact, apierror.ApiError)
 	GetByName(ctx context.Context, name string) (*entities.Contact, apierror.ApiError)
