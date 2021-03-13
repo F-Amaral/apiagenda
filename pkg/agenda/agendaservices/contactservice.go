@@ -3,8 +3,10 @@ package agendaservices
 import (
 	"context"
 	"github.com/F-Amaral/apiagenda/internal/api/apierror"
+	"github.com/F-Amaral/apiagenda/pkg/contracts"
 	"github.com/F-Amaral/apiagenda/pkg/domain/entities"
 	"github.com/F-Amaral/apiagenda/pkg/domain/repositories"
+	"net/http"
 )
 
 type contactService struct {
@@ -30,12 +32,13 @@ func (self *contactService) Add(ctx context.Context, contact *entities.Contact) 
 }
 
 func (self *contactService) Remove(ctx context.Context, id string) (*entities.Contact, apierror.ApiError) {
-	contact, err := self.contactRepository.GetById(ctx, id)
+
+	err := self.contactRepository.Remove(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = self.contactRepository.Remove(ctx, id)
+	contact, err := self.contactRepository.GetById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -43,28 +46,29 @@ func (self *contactService) Remove(ctx context.Context, id string) (*entities.Co
 	return contact, nil
 }
 
-func (self *contactService) GetByName(ctx context.Context, name string) (*entities.Contact, apierror.ApiError) {
-	return self.contactRepository.GetByName(ctx, name)
-}
-
 func (self *contactService) GetById(ctx context.Context, id string) (*entities.Contact, apierror.ApiError) {
 	return self.contactRepository.GetById(ctx, id)
 }
 
-func (self *contactService) GetAll(ctx context.Context) ([]*entities.Contact, apierror.ApiError) {
-	return self.contactRepository.GetAll(ctx)
-
+func (self *contactService) Search(ctx context.Context, searchRequest *contracts.SearchRequest) ([]*entities.Contact, apierror.ApiError) {
+	return self.contactRepository.Search(ctx, searchRequest)
 }
 
 func (self *contactService) Update(ctx context.Context, contact *entities.Contact) (*entities.Contact, apierror.ApiError) {
-	err := self.contactRepository.Update(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	updatedContact, err := self.contactRepository.GetById(ctx, contact.Id)
+
+	currentContact, err := self.contactRepository.GetById(ctx, contact.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedContact, nil
+	if currentContact.Deleted {
+		return nil, apierror.New(http.StatusNotFound, "contact not found")
+	}
+
+	err = self.contactRepository.Update(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+
+	return contact, nil
 }
