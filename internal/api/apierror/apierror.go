@@ -1,5 +1,11 @@
 package apierror
 
+import (
+	"context"
+	"fmt"
+	"github.com/F-Amaral/apiagenda/internal/api/apilogger"
+)
+
 type ApiError interface {
 	ErrorStatusCode() int
 	Error() string
@@ -23,4 +29,8 @@ func (self apiError) ErrorStatusCode() int {
 
 func (self apiError) Error() string {
 	return self.Message
+}
+
+func Log(ctx context.Context, err ApiError) {
+	apilogger.Error(ctx, fmt.Sprintf("status_code: %d, message: %s", err.ErrorStatusCode(), err.Error()))
 }

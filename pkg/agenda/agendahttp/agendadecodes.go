@@ -20,7 +20,9 @@ func DecodeContactById(ctx context.Context, r *http.Request) (request interface{
 	urlParams := mux.Vars(r)
 	id := urlParams["id"]
 	if id == "" {
-		return nil, apierror.New(http.StatusBadRequest, "route parameter id is required")
+		apiErr := apierror.New(http.StatusBadRequest, "route parameter id is required")
+		apierror.Log(ctx, apiErr)
+		return nil, apiErr
 	}
 	return id, nil
 
@@ -29,12 +31,16 @@ func DecodeContactById(ctx context.Context, r *http.Request) (request interface{
 func DecodeContact(ctx context.Context, r *http.Request) (request interface{}, err error) {
 	bytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, apierror.New(http.StatusInternalServerError, err.Error())
+		err := apierror.New(http.StatusInternalServerError, err.Error())
+		apierror.Log(ctx, err)
+		return nil, err
 	}
 	contact := &entities.Contact{}
 	err = json.Unmarshal(bytes, contact)
 	if err != nil {
-		return nil, apierror.New(http.StatusBadRequest, err.Error())
+		apiErr := apierror.New(http.StatusBadRequest, err.Error())
+		apierror.Log(ctx, apiErr)
+		return nil, apiErr
 	}
 
 	return contact, nil

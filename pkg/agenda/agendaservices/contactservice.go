@@ -62,7 +62,9 @@ func (self *contactService) Update(ctx context.Context, contact *entities.Contac
 	}
 
 	if currentContact.Deleted {
-		return nil, apierror.New(http.StatusNotFound, "contact not found")
+		apiErr := apierror.New(http.StatusNotFound, "contact not found")
+		apierror.Log(ctx, apiErr)
+		return nil, apiErr
 	}
 
 	err = self.contactRepository.Update(ctx, contact)

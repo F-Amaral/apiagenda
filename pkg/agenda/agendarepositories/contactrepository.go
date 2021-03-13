@@ -25,7 +25,9 @@ func (self contactRepository) Add(ctx context.Context, contact *entities.Contact
 	err := self.db.Transaction(func(tx *gorm.DB) error {
 		err := tx.Create(contact).Error
 		if err != nil {
-			return apierror.New(http.StatusInternalServerError, err.Error())
+			apiErr := apierror.New(http.StatusInternalServerError, err.Error())
+			apierror.Log(ctx, apiErr)
+			return apiErr
 		}
 		return nil
 	})
@@ -53,7 +55,9 @@ func (self contactRepository) GetById(ctx context.Context, id string) (*entities
 	contact := &entities.Contact{}
 	tx := self.db.Where("id = ?", id).First(contact)
 	if tx.Error != nil {
-		return nil, apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apiErr := apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apierror.Log(ctx, apiErr)
+		return nil, apiErr
 	}
 	return contact, nil
 }
@@ -91,7 +95,9 @@ func (self contactRepository) Search(ctx context.Context, searchRequest *contrac
 
 	tx = tx.Scan(&response)
 	if tx.Error != nil {
-		return nil, apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apiErr := apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apierror.Log(ctx, apiErr)
+		return nil, apiErr
 	}
 	return response, nil
 }
@@ -102,7 +108,9 @@ func (self contactRepository) Update(ctx context.Context, contact *entities.Cont
 		"email": contact.Email,
 	})
 	if tx.Error != nil {
-		return apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apiErr := apierror.New(http.StatusInternalServerError, tx.Error.Error())
+		apierror.Log(ctx, apiErr)
+		return apiErr
 	}
 	return nil
 }

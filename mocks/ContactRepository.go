@@ -7,6 +7,8 @@ import (
 
 	apierror "github.com/F-Amaral/apiagenda/internal/api/apierror"
 
+	contracts "github.com/F-Amaral/apiagenda/pkg/contracts"
+
 	entities "github.com/F-Amaral/apiagenda/pkg/domain/entities"
 
 	mock "github.com/stretchr/testify/mock"
@@ -31,31 +33,6 @@ func (_m *ContactRepository) Add(ctx context.Context, contact *entities.Contact)
 	}
 
 	return r0
-}
-
-// GetAll provides a mock function with given fields: ctx
-func (_m *ContactRepository) GetAll(ctx context.Context) ([]*entities.Contact, apierror.ApiError) {
-	ret := _m.Called(ctx)
-
-	var r0 []*entities.Contact
-	if rf, ok := ret.Get(0).(func(context.Context) []*entities.Contact); ok {
-		r0 = rf(ctx)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*entities.Contact)
-		}
-	}
-
-	var r1 apierror.ApiError
-	if rf, ok := ret.Get(1).(func(context.Context) apierror.ApiError); ok {
-		r1 = rf(ctx)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(apierror.ApiError)
-		}
-	}
-
-	return r0, r1
 }
 
 // GetById provides a mock function with given fields: ctx, id
@@ -83,31 +60,6 @@ func (_m *ContactRepository) GetById(ctx context.Context, id string) (*entities.
 	return r0, r1
 }
 
-// GetByName provides a mock function with given fields: ctx, name
-func (_m *ContactRepository) GetByName(ctx context.Context, name string) (*entities.Contact, apierror.ApiError) {
-	ret := _m.Called(ctx, name)
-
-	var r0 *entities.Contact
-	if rf, ok := ret.Get(0).(func(context.Context, string) *entities.Contact); ok {
-		r0 = rf(ctx, name)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*entities.Contact)
-		}
-	}
-
-	var r1 apierror.ApiError
-	if rf, ok := ret.Get(1).(func(context.Context, string) apierror.ApiError); ok {
-		r1 = rf(ctx, name)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(apierror.ApiError)
-		}
-	}
-
-	return r0, r1
-}
-
 // Remove provides a mock function with given fields: ctx, id
 func (_m *ContactRepository) Remove(ctx context.Context, id string) apierror.ApiError {
 	ret := _m.Called(ctx, id)
@@ -122,6 +74,31 @@ func (_m *ContactRepository) Remove(ctx context.Context, id string) apierror.Api
 	}
 
 	return r0
+}
+
+// Search provides a mock function with given fields: ctx, searchRequest
+func (_m *ContactRepository) Search(ctx context.Context, searchRequest *contracts.SearchRequest) ([]*entities.Contact, apierror.ApiError) {
+	ret := _m.Called(ctx, searchRequest)
+
+	var r0 []*entities.Contact
+	if rf, ok := ret.Get(0).(func(context.Context, *contracts.SearchRequest) []*entities.Contact); ok {
+		r0 = rf(ctx, searchRequest)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*entities.Contact)
+		}
+	}
+
+	var r1 apierror.ApiError
+	if rf, ok := ret.Get(1).(func(context.Context, *contracts.SearchRequest) apierror.ApiError); ok {
+		r1 = rf(ctx, searchRequest)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(apierror.ApiError)
+		}
+	}
+
+	return r0, r1
 }
 
 // Update provides a mock function with given fields: ctx, contact

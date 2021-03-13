@@ -24,11 +24,30 @@ func main() {
 		httptransport.ServerErrorEncoder(apiencodes.EncodeError),
 	}
 
-	searchContactsEndpoint := httptransport.NewServer(agendahttp.MakeSearchContacts(contactService), agendahttp.DecodeSearchRequest, apiencodes.EncodeResponse, serverOptions...)
-	getContactByIdEndpoint := httptransport.NewServer(agendahttp.MakeGetContactById(contactService), agendahttp.DecodeContactById, apiencodes.EncodeResponse, serverOptions...)
-	addContactEndpoint := httptransport.NewServer(agendahttp.MakeAddContact(contactService), agendahttp.DecodeContact, apiencodes.EncodeResponse, serverOptions...)
-	updateContactEndpoint := httptransport.NewServer(agendahttp.MakeUpdateContact(contactService), agendahttp.DecodeContact, apiencodes.EncodeResponse, serverOptions...)
-	deleteContactEndpoint := httptransport.NewServer(agendahttp.MakeDeleteContact(contactService), agendahttp.DecodeContactById, apiencodes.EncodeResponse, serverOptions...)
+	searchContactsEndpoint := httptransport.NewServer(apiencodes.LogRequest(agendahttp.MakeSearchContacts(contactService)),
+		agendahttp.DecodeSearchRequest,
+		apiencodes.EncodeResponse,
+		serverOptions...)
+
+	getContactByIdEndpoint := httptransport.NewServer(apiencodes.LogRequest(agendahttp.MakeGetContactById(contactService)),
+		agendahttp.DecodeContactById,
+		apiencodes.EncodeResponse,
+		serverOptions...)
+
+	addContactEndpoint := httptransport.NewServer(apiencodes.LogRequest(agendahttp.MakeAddContact(contactService)),
+		agendahttp.DecodeContact,
+		apiencodes.EncodeResponse,
+		serverOptions...)
+
+	updateContactEndpoint := httptransport.NewServer(apiencodes.LogRequest(agendahttp.MakeUpdateContact(contactService)),
+		agendahttp.DecodeContact,
+		apiencodes.EncodeResponse,
+		serverOptions...)
+
+	deleteContactEndpoint := httptransport.NewServer(apiencodes.LogRequest(agendahttp.MakeDeleteContact(contactService)),
+		agendahttp.DecodeContactById,
+		apiencodes.EncodeResponse,
+		serverOptions...)
 
 	router := mux.NewRouter()
 	router.Handle("/contacts/search", searchContactsEndpoint)
