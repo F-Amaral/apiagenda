@@ -1,1 +1,1 @@
-# ApiCep-Go
+# A basic go structure study
